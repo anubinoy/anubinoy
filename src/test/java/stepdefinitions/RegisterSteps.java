@@ -10,62 +10,73 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+//import jdk.vm.ci.code.Register;
 import pageObjects.RegisterPage;
 
 public class RegisterSteps {
 	
-	 static WebDriver chromedriver;
+	 WebDriver driver;
+	 RegisterPage fromregisterjava;
 	 
-	 String url = "https://dsportalapp.herokuapp.com/home";
-		
-		By registerBtn = By.cssSelector("div.navbar-nav:nth-child(3) > ul:nth-child(2) > a:nth-child(2)");
-		By usname = By.id("id_username");
-		By psword = By.name("password1");
-		By confpsword = By.cssSelector("#id_password2");
-		By register = By.xpath("//input[@value='Register']");
-		
-    
-	
-	@Given("The user opens Register Page")
+	 
+	@Given("^The user opens Register Page")
 	public void the_user_opens_register_page() {
 		
 		System.out.println("We are on the register page");
-		chromedriver = new ChromeDriver();
-		chromedriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
-		chromedriver.get("https://dsportalapp.herokuapp.com/home");
-		chromedriver.manage().window().maximize();
 		
-		chromedriver.findElement(registerBtn).click();
-	   
+		fromregisterjava = new RegisterPage();
+		fromregisterjava.registerPage();
+		
 	}
 
 	@When("^The user enters (.*), (.*) and (.*)$")
 	public void the_user_enters_q_atesters(String username, String password, String confirmpassword) {
-		System.out.println("enters username and password");
-		chromedriver.findElement(usname).sendKeys(username);
-		chromedriver.findElement(psword).sendKeys(password);
-		chromedriver.findElement(confpsword).sendKeys(confirmpassword);
 		
-      }
+		fromregisterjava = new RegisterPage();
+		
+		fromregisterjava.registerClick();
+		
+       fromregisterjava.sendUserName(username);
+		fromregisterjava.sendPassword(password);
+		fromregisterjava.sendConfirmation(confirmpassword);
+		
+		
+		 }
 	
 			
     @And("Clicks on register button")
 	public void clicks_on_register_button() {
-		
+    	
+    	fromregisterjava = new RegisterPage();
 		System.out.println("Click on register button"); 
+		fromregisterjava.register();
 		
-		chromedriver.findElement(register).click();
 		
 	}
-
-	@Then("User is navigated to the homepage")
+    
+    @Then("User gets instruction")
+    public void user_gets_instruction() {
+    	
+    	fromregisterjava = new RegisterPage(); 
+    	System.out.println("The user gets _please fill out this field_ instruction ");
+    }
+    
+    
+    @Then("The user is navigated to the homepage")
 	public void user_is_navigated_to_the_homepage() {
-		
-		System.out.println("Navigates to homepage"); 
+		fromregisterjava = new RegisterPage();
+		fromregisterjava.successMsg();
 	    
 	}
 
- 
+	@Then("The User gets an error message for password missmatch")
+	public void the_user_gets_an_error_message_for_password_missmatch() {
+	    
+		fromregisterjava = new RegisterPage();
+		fromregisterjava.pwdmissMatch();
+	
+	}
+
 
 	
 
